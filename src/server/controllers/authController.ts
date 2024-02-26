@@ -17,13 +17,13 @@ export const authenticateUser = async (email: string, password: string): Promise
     const [results] = await query<User[]>('SELECT id, email, password, role, created_at FROM Users WHERE email = ?', [email]);
 
     if (!results || (Array.isArray(results) && results.length === 0)) {
-      return { success: false, user: undefined }; // User not found
+      return { success: false, user: undefined }; 
     }
 
     const user = Array.isArray(results) ? results[0] : results;
 
     if (!user || !user.password) {
-      return { success: false, user: undefined }; // User is undefined or user.password is undefined
+      return { success: false, user: undefined }; 
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -31,7 +31,7 @@ export const authenticateUser = async (email: string, password: string): Promise
     if (passwordMatch) {
       return { success: true, user };
     } else {
-      return { success: false, user: undefined }; // Incorrect password
+      return { success: false, user: undefined }; 
     }
   } catch (error) {
     console.error('Error authenticating user', error);
@@ -68,14 +68,14 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const queryResult: { affectedRows?: number } | { affectedRows?: number }[] = await query('INSERT INTO Users (email, hash, role, _created) VALUES (?, ?, ?, ?)', [
+    const queryResult: { affectedRows?: number }[] = await query('INSERT INTO Users (email, hash, role, _created) VALUES (?, ?, ?, ?)', [
       email,
       hashedPassword,
       'user',
       new Date(),
     ]);
 
-    const affectedRows: number = Array.isArray(queryResult) ? queryResult.length : queryResult.affectedRows || 0;
+    const affectedRows: number = queryResult.reduce((sum, result) => sum + (result.affectedRows || 0), 0);
 
     if (affectedRows > 0) {
       const token: string = jwt.sign({ email }, config.jwt.secret, { expiresIn: config.jwt.expiration });

@@ -20,8 +20,10 @@ async function fetcher<T = any>(url: string, method: ValidMethods = 'GET', rawDa
     const res = await fetch(fullUrl, options);
 
     const contentType = res.headers.get('content-type');
+    
     if (!res.ok) {
-      throw new Error('Server responded with an error');
+      const errorData = await res.json();
+      throw new Error(errorData.message || 'Server responded with an error');
     } else if (contentType && contentType.includes('application/json')) {
       const data = await res.json();
       console.log('Server response:', data);
@@ -48,3 +50,4 @@ export const GET = <T = any>(url: string) => fetcher<T>(url);
 export const DELETE = <T = any>(url: string) => fetcher<T>(url, 'DELETE');
 export const POST = <T = any>(url: string, data: any) => fetcher<T>(url, 'POST', data);
 export const PUT = <T = any>(url: string, data: any) => fetcher<T>(url, 'PUT', data);
+export const registerUser = <T = any>(data: any) => POST<T>('/api/register', data);
