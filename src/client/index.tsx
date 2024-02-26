@@ -4,7 +4,6 @@ import App from './App';
 
 import './styles/app.scss';
 
-// ESBuild Hot Reload for dev environment only
 if (process.env.NODE_ENV === 'development') {
 	new EventSource('/esbuild').addEventListener('change', () => location.reload());
 }
