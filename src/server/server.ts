@@ -22,8 +22,9 @@ if (isDevelopment) {
 app.use('/api/protected-route', tokenCheck);
 app.use('/api', bookRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/books,')
 
-app.get('/api/hello', (req: Request, res: Response) => {
+app.get('/api/hello', (_, res: Response) => {
   res.json({ message: 'World' });
 });
 
@@ -38,11 +39,6 @@ if (isProduction) {
 
 const PORT: string | number = process.env.PORT || 3000;
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  
-  // Demonstrative purpose: hash and log the password 'password123' at server startup
-  const passwordToHash = 'password123';
-  const hashedPassword = await bcrypt.hash(passwordToHash, 10);
-  console.log(`Hashed version of "${passwordToHash}": ${hashedPassword}`);
 });

@@ -24,19 +24,19 @@ const App: React.FC<AppProps> = () => {
   const handleCreateBook = async () => {
     try {
       await POST('/api/books', newBook);
-      fetchBooks(); // Refresh the list after creating a new book
-      setNewBook({ title: '', author: '' }); // Clear the form
+      fetchBooks(); 
+      setNewBook({ title: '', author: '' }); 
     } catch (error) {
       console.error('Error creating book', error);
     }
   };
 
   const handleUpdateBook = async (id: number) => {
-    // Assume newBook contains updated information
+
     try {
       await PUT(`/api/books/${id}`, newBook);
-      fetchBooks(); // Refresh the list after updating the book
-      setNewBook({ title: '', author: '' }); // Clear the form
+      fetchBooks(); 
+      setNewBook({ title: '', author: '' }); 
     } catch (error) {
       console.error('Error updating book', error);
     }
@@ -45,7 +45,7 @@ const App: React.FC<AppProps> = () => {
   const handleDeleteBook = async (id: number) => {
     try {
       await DELETE(`/api/books/${id}`);
-      fetchBooks(); // Refresh the list after deleting the book
+      fetchBooks(); 
     } catch (error) {
       console.error('Error deleting book', error);
     }
@@ -55,7 +55,6 @@ const App: React.FC<AppProps> = () => {
     <div className="mx-auto mt-5 w-50">
       <h1>Book List</h1>
 
-      {/* Create Book Form */}
       <div>
         <h2>Create New Book</h2>
         <label>Title: </label>
@@ -65,7 +64,6 @@ const App: React.FC<AppProps> = () => {
         <button onClick={handleCreateBook}>Create</button>
       </div>
 
-      {/* List of Books */}
       <div>
         <h2>Books</h2>
         <ul>
