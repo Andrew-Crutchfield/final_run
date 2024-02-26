@@ -66,10 +66,8 @@ export const registerUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    // Hash the password before saving it to the database
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save the user with the hashed password to the database
     const queryResult: { affectedRows?: number } | { affectedRows?: number }[] = await query('INSERT INTO Users (email, hash, role, _created) VALUES (?, ?, ?, ?)', [
       email,
       hashedPassword,
