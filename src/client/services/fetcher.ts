@@ -50,4 +50,4 @@ export const GET = <T = any>(url: string) => fetcher<T>(url);
 export const DELETE = <T = any>(url: string) => fetcher<T>(url, 'DELETE');
 export const POST = <T = any>(url: string, data: any) => fetcher<T>(url, 'POST', data);
 export const PUT = <T = any>(url: string, data: any) => fetcher<T>(url, 'PUT', data);
-export const registerUser = <T = any>(data: any) => POST<T>('/api/register', data);
+export const registerUser = <T = any>(data: any) => POST<T>('/auth/register', data);

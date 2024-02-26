@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await POST('/api/register', { email, password });
+      const response = await POST('/auth/register', { email, password });
       if (response.token) {
         navigate('/booklisting');
       } else {
