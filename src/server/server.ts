@@ -22,7 +22,6 @@ if (isDevelopment) {
 app.use('/api/protected-route', tokenCheck);
 app.use('/api', bookRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/books,')
 
 app.get('/api/hello', (_, res: Response) => {
   res.json({ message: 'World' });

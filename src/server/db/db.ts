@@ -1,14 +1,20 @@
-import { createPool } from 'mysql2/promise';
-import config from '../config/config';
+import mysql, { RowDataPacket } from 'mysql2/promise';
+import dotenv from 'dotenv';
 
-const pool = createPool(config.mysql);
+dotenv.config();
 
-export const query = async (query: string, values?: any[]) => {
-  const connection = await pool.getConnection();
-  try {
-    const results = await connection.query(query, values);
-    return results[0];
-  } finally {
-    connection.release();
-  }
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_DATABASE || 'your_default_database_name',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+export const query = async <T>(sql: string, params: any[] = []): Promise<T[]> => {
+  const [rows] = await pool.execute<RowDataPacket[]>(sql, params);
+
+  return rows.map(row => ({ ...row } as T));
 };

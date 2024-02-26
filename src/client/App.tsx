@@ -32,7 +32,6 @@ const App: React.FC<AppProps> = () => {
   };
 
   const handleUpdateBook = async (id: number) => {
-
     try {
       await PUT(`/api/books/${id}`, newBook);
       fetchBooks(); 

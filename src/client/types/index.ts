@@ -4,18 +4,19 @@ export interface User {
     password: string;
     role: string;
     created_at: Date;
-}
-
-export interface Category {
+  }
+  
+  export interface Category {
     id: number;
     name: string;
-}
-
-export interface Book {
+  }
+  
+  export interface Book {
     id: number;
     categoryid: Category["id"];
     title: string;
     author: string;
     price: number;
     created_at: Date;
-}
+  }
+  
