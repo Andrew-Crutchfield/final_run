@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
-import config from '../config';
+import config from '../config/config';
 import { Payload } from '../types';
 
 export const tokenCheck: RequestHandler = (req, res, next) => {

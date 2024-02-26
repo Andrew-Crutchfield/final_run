@@ -2,38 +2,49 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { POST } from '../services/fetcher';
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await POST('/api/login', { email, password });
-
-      if (response) {
+      const response = await POST('/auth/login', { email, password });
+      if (response.token) {
         navigate('/booklisting');
+      } else {
+        setErrorMessage(response.message || 'Failed to log in');
       }
     } catch (error) {
       console.error('Login failed', error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message || 'Login failed due to an unexpected error');
+      } else {
+        setErrorMessage('Login failed due to an unexpected error');
+      }
     }
   };
 
   const handleRegister = async () => {
     try {
       const response = await POST('/api/register', { email, password });
-
-      if (response) {
+      if (response.token) {
         navigate('/booklisting');
+      } else {
+        setErrorMessage('Failed to register');
       }
     } catch (error) {
       console.error('Registration failed', error);
+      setErrorMessage('Registration failed due to an error');
     }
   };
 
   return (
     <div>
-      <h1>Login/Register</h1>
+      <h1>Welcome to Our HomePage</h1>
+      <div>Login or Register to Continue</div>
+      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       <label>Email: </label>
       <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
       <label>Password: </label>
@@ -44,4 +55,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;
