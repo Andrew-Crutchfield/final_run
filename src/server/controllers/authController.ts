@@ -68,7 +68,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const queryResult: { affectedRows?: number }[] = await query('INSERT INTO Users (email, hash, role, _created) VALUES (?, ?, ?, ?)', [
+    const queryResult: { affectedRows?: number }[] = await query('INSERT INTO Users (email, password, role, _created) VALUES (?, ?, ?, ?)', [
       email,
       hashedPassword,
       'user',
@@ -85,7 +85,6 @@ export const registerUser = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error('Registration failed', error);
-
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };

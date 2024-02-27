@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { GET, POST, DELETE } from '../services/fetcher'; 
+import { GET, POST, DELETE, PUT } from '../services/fetcher'; 
 
 interface Book {
   id: number;
@@ -12,6 +12,7 @@ interface Book {
 const BookListing: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [newBook, setNewBook] = useState({ title: '', author: '', price: '' });
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
 
   const fetchBooks = async () => {
     try {
@@ -42,6 +43,39 @@ const BookListing: React.FC = () => {
     }
   };
 
+  const handleEditBook = async () => {
+    if (editingBook) {
+      try {
+        const editedBookData = {
+          title: newBook.title,
+          author: newBook.author,
+          price: newBook.price ? parseFloat(newBook.price) : undefined,
+          categoryid: 1, 
+        };
+        await PUT<Book>(`/api/books/${editingBook.id}`, editedBookData);
+        setEditingBook(null);
+        setNewBook({ title: '', author: '', price: '' });
+        await fetchBooks(); 
+      } catch (error) {
+        console.error('Error editing book', error);
+      }
+    }
+  };
+
+  const handleStartEditing = (book: Book) => {
+    setEditingBook(book);
+    setNewBook({
+      title: book.title,
+      author: book.author,
+      price: book.price ? String(book.price) : '',
+    });
+  };
+
+  const handleCancelEditing = () => {
+    setEditingBook(null);
+    setNewBook({ title: '', author: '', price: '' });
+  };
+
   const handleDeleteBook = async (id: number) => {
     try {
       await DELETE(`/api/books/${id}`);
@@ -56,7 +90,7 @@ const BookListing: React.FC = () => {
       <h1>Book Listing</h1>
       <Link to="/bookdetails">Go to Book Details</Link>
 
-      <h2>Add a New Book</h2>
+      <h2>{editingBook ? 'Edit Book' : 'Add a New Book'}</h2>
       <input
         type="text"
         placeholder="Title"
@@ -75,13 +109,21 @@ const BookListing: React.FC = () => {
         value={newBook.price}
         onChange={e => setNewBook({ ...newBook, price: e.target.value })}
       />
-      <button onClick={handleAddBook}>Add Book</button>
+      {editingBook ? (
+        <>
+          <button onClick={handleEditBook}>Save Edit</button>
+          <button onClick={handleCancelEditing}>Cancel Edit</button>
+        </>
+      ) : (
+        <button onClick={handleAddBook}>Add Book</button>
+      )}
 
       <h2>Books</h2>
       <ul>
         {books.map(book => (
           <li key={book.id}>
             {book.title} by {book.author} - ${book.price}
+            <button onClick={() => handleStartEditing(book)}>Edit</button>
             <button onClick={() => handleDeleteBook(book.id)}>Delete</button>
           </li>
         ))}
