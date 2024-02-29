@@ -1,4 +1,4 @@
-import mysql, { RowDataPacket } from 'mysql2/promise';
+import mysql, { ResultSetHeader } from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,8 +13,8 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-export const query = async <T>(sql: string, params: any[] = []): Promise<T[]> => {
-  const [rows] = await pool.execute<RowDataPacket[]>(sql, params);
-
-  return rows.map(row => ({ ...row } as T));
+// Adjusted query function
+export const query = async <T = ResultSetHeader>(sql: string, params: any[] = []): Promise<T> => {
+  const [rows] = await pool.execute(sql, params);
+  return rows as T;
 };
